@@ -8,4 +8,5 @@ type Conn interface {
 
 type Client struct {
 	Connection Conn
+	Username string
 }
