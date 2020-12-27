@@ -51,7 +51,8 @@ func (wsh Handler) ListenForEvents(currentClient *model.Client) {
 	}()
 
 	for {
-		_, _, err := currentClient.Connection.ReadMessage()
+		var ev model.EventMetadata
+		err := currentClient.Connection.ReadJSON(&ev)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)

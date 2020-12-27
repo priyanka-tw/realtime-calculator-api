@@ -32,22 +32,6 @@ func (m *MockConn) EXPECT() *MockConnMockRecorder {
 	return m.recorder
 }
 
-// ReadMessage mocks base method
-func (m *MockConn) ReadMessage() (int, []byte, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ReadMessage")
-	ret0, _ := ret[0].(int)
-	ret1, _ := ret[1].([]byte)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// ReadMessage indicates an expected call of ReadMessage
-func (mr *MockConnMockRecorder) ReadMessage() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadMessage", reflect.TypeOf((*MockConn)(nil).ReadMessage))
-}
-
 // WriteJSON mocks base method
 func (m *MockConn) WriteJSON(v interface{}) error {
 	m.ctrl.T.Helper()
@@ -60,6 +44,20 @@ func (m *MockConn) WriteJSON(v interface{}) error {
 func (mr *MockConnMockRecorder) WriteJSON(v interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteJSON", reflect.TypeOf((*MockConn)(nil).WriteJSON), v)
+}
+
+// ReadJSON mocks base method
+func (m *MockConn) ReadJSON(v interface{}) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadJSON", v)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ReadJSON indicates an expected call of ReadJSON
+func (mr *MockConnMockRecorder) ReadJSON(v interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadJSON", reflect.TypeOf((*MockConn)(nil).ReadJSON), v)
 }
 
 // Close mocks base method

@@ -42,9 +42,9 @@ func (suite *SocketHandlerTestSuite) SetupTest() {
 func (suite *SocketHandlerTestSuite) Test_ShouldReturnListen_OnAConnectionUntilErrorEncountered() {
 	mockClient := &model.Client{Connection: suite.mockConn}
 	registeredClients := map[*model.Client]bool{}
-	suite.mockConn.EXPECT().ReadMessage().
-		Return(1, []uint8("a message"), nil).
-		Return(1, []uint8(""), errors.New(""))
+	suite.mockConn.EXPECT().ReadJSON(gomock.Any()).
+		Return(nil).
+		Return(errors.New("an error"))
 	suite.mockHub.EXPECT().RegisteredClients().Return(registeredClients).Times(1)
 	suite.mockConn.EXPECT().Close().Return(nil).Times(1)
 
