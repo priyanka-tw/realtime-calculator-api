@@ -81,3 +81,15 @@ func (suite *CalculatorHandlerTestSuite) Test_ShouldReturnInternalServerError_On
 	assert.Equal(suite.T(), 500, suite.responseRecorder.Code)
 }
 
+func (suite *CalculatorHandlerTestSuite) Test_ShouldAddMetadata_OnContext() {
+	calculator := model.Calculator{Expression: "5*4"}
+	requestBytes, _ := json.Marshal(calculator)
+	suite.testContext.Request, _= http.NewRequest("POST", "/calculate", bytes.NewBuffer(requestBytes))
+	suite.mockService.EXPECT().Calculate("5*4").Return("20", nil).Times(1)
+
+	suite.handler.Calculate(suite.testContext)
+	actual, _ := suite.testContext.Get("calculator")
+
+	calculator.Result = "20"
+	assert.Equal(suite.T(), calculator, actual)
+}
