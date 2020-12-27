@@ -124,20 +124,6 @@ func (suite *SocketHandlerTestSuite) Test_ShouldTriggerLogoutEvent_IfConnectedUs
 	suite.NotNil(suite.T(), err)
 }
 
-func (suite *SocketHandlerTestSuite) Test_ShouldNotTriggerLogoutEvent_IfConnectedUserIsNotRegistered() {
-	client := &model.Client{
-		Connection: suite.mockConn,
-		Username:   "test-username",
-	}
-	suite.mockConn.EXPECT().ReadJSON(gomock.Any()).Return(errors.New("an error")).Times(1)
-	suite.mockHub.EXPECT().RegisteredClients().Return(map[*model.Client]bool{}).Times(1)
-	suite.mockConn.EXPECT().Close().Return(nil).Times(1)
-
-	err := suite.handler.ListenForEvents(client)
-
-	suite.NotNil(suite.T(), err)
-}
-
 func (suite *SocketHandlerTestSuite) Test_ShouldReturn500_IfErrorEncounteredWhileUpgradingProtocol() {
 	suite.testContext.Request, _ = http.NewRequest("GET", "/ws", nil)
 	suite.mockUpgrader.EXPECT().Upgrade(suite.testContext.Writer, suite.testContext.Request, nil).

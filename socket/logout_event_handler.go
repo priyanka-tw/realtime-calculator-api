@@ -22,6 +22,7 @@ func (l LogoutHandler) Handle(currentClient *model.Client, data string) error {
 	log.Println("logout event handler: handling event")
 
 	l.numberOfUsers--
+	currentClient.Username = ""
 	writeEventHandler := model.EventMetadata{
 		Event: "logged in users",
 		Data:  strconv.Itoa(l.numberOfUsers),

@@ -55,8 +55,8 @@ func (wsh Handler) ListenForEvents(currentClient *model.Client) error {
 		registeredClients := wsh.hub.RegisteredClients()
 		delete(registeredClients, currentClient)
 
-		 _, ok := registeredClients[currentClient]
-		if currentClient.Username != "" && ok{
+		usernameIsEmpty := currentClient.Username == ""
+		if !usernameIsEmpty {
 			ev := model.EventMetadata{Event: "logout", Data: ""}
 			wsh.triggerEvent(currentClient, ev)
 		}
