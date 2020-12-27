@@ -71,7 +71,7 @@ func (wsh Handler) ListenForEvents(currentClient *model.Client) error {
 			break
 		}
 
-		err = wsh.triggerEvent(nil, ev)
+		err = wsh.triggerEvent(currentClient, ev)
 		if err != nil {
 			log.Println(err)
 			return err

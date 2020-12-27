@@ -66,7 +66,7 @@ func (suite *SocketHandlerTestSuite) Test_ShouldListenAndHandleEvent_OnAConnecti
 	suite.mockConn.EXPECT().ReadJSON(metadata).
 		Return(nil)
 	suite.mockGenerator.EXPECT().GetHandler(gomock.Any()).Return(suite.mockEventHandler, nil).Times(1)
-	suite.mockEventHandler.EXPECT().Handle(gomock.Any(), gomock.Any()).Return(nil).Times(1)
+	suite.mockEventHandler.EXPECT().Handle(mockClient, gomock.Any()).Return(nil).Times(1)
 	suite.mockConn.EXPECT().ReadJSON(metadata).
 		Return(errors.New("an error"))
 	suite.mockHub.EXPECT().RegisteredClients().Return(registeredClients).Times(1)
@@ -99,7 +99,7 @@ func (suite *SocketHandlerTestSuite) Test_ShouldReturn_IfErrorEncounteredWhileHa
 	suite.mockConn.EXPECT().ReadJSON(metadata).
 		Return(nil)
 	suite.mockGenerator.EXPECT().GetHandler(gomock.Any()).Return(suite.mockEventHandler, nil).Times(1)
-	suite.mockEventHandler.EXPECT().Handle(gomock.Any(), gomock.Any()).Return(errors.New("an error")).Times(1)
+	suite.mockEventHandler.EXPECT().Handle(mockClient, gomock.Any()).Return(errors.New("an error")).Times(1)
 	suite.mockHub.EXPECT().RegisteredClients().Return(registeredClients).Times(1)
 	suite.mockConn.EXPECT().Close().Return(nil).Times(1)
 
@@ -116,7 +116,7 @@ func (suite *SocketHandlerTestSuite) Test_ShouldTriggerLogoutEvent_IfConnectedUs
 	suite.mockConn.EXPECT().ReadJSON(gomock.Any()).Return(errors.New("an error")).Times(1)
 	suite.mockHub.EXPECT().RegisteredClients().Return(map[*model.Client]bool{}).Times(1)
 	suite.mockGenerator.EXPECT().GetHandler("logout").Return(suite.mockEventHandler, nil).Times(1)
-	suite.mockEventHandler.EXPECT().Handle(gomock.Any(), gomock.Any()).Return(nil).Times(1)
+	suite.mockEventHandler.EXPECT().Handle(client, gomock.Any()).Return(nil).Times(1)
 	suite.mockConn.EXPECT().Close().Return(nil).Times(1)
 
 	err := suite.handler.ListenForEvents(client)
@@ -141,7 +141,7 @@ func (suite *SocketHandlerTestSuite) Test_ShouldReturn200_OnBroadcastingDataToAl
 	}
 	suite.testContext.Set("calculator", calc)
 	suite.mockGenerator.EXPECT().GetHandler(gomock.Any()).Return(suite.mockEventHandler, nil).Times(1)
-	suite.mockEventHandler.EXPECT().Handle(gomock.Any(), gomock.Any()).Return(nil).Times(1)
+	suite.mockEventHandler.EXPECT().Handle(nil, gomock.Any()).Return(nil).Times(1)
 
 	suite.handler.BroadcastResult(suite.testContext)
 
