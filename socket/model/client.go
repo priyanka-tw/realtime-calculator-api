@@ -1,7 +1,10 @@
 package model
 
-import "github.com/gorilla/websocket"
+type Conn interface {
+	ReadMessage() (messageType int, p []byte, err error)
+	Close() error
+}
 
 type Client struct {
-	Connection *websocket.Conn
+	Connection Conn
 }

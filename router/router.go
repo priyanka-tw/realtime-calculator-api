@@ -9,6 +9,7 @@ import (
 )
 
 func InitializeRouter() *gin.Engine {
+
 	engine := gin.Default()
 	engine.Use(corsMiddleware)
 
@@ -22,7 +23,8 @@ func InitializeRouter() *gin.Engine {
 			return true
 		},
 	}
-	socketHandler := socket.NewSocketHandler(upgrader)
+	hub := socket.NewHub()
+	socketHandler := socket.NewSocketHandler(upgrader, hub)
 
 	engine.POST("/calculate", calculatorHandler.Calculate)
 	engine.GET("/ws", socketHandler.ServeWrapper)
