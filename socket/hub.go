@@ -1,5 +1,7 @@
 package socket
 
+//go:generate mockgen -source=hub.go -destination=./mock/hub_mock.go -package=mock
+
 import (
 	"log"
 	"realtime-calculator-api/socket/model"
