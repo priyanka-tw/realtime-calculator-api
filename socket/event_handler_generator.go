@@ -4,6 +4,7 @@ package socket
 
 import (
 	"errors"
+	"log"
 	"realtime-calculator-api/socket/interface"
 )
 
@@ -28,6 +29,7 @@ func NewEventHandlerGenerator(hub Hub) EventHandlerGenerator {
 }
 
 func (eh eventHandlerGenerator) GetHandler(event string) (_interface.EventHandler, error) {
+	log.Println("event handler generator: get handler")
 	switch event {
 	case "login":
 		return NewLoginHandler(eh.Count, eh.hub), nil

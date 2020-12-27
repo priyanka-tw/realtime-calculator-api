@@ -1,6 +1,7 @@
 package socket
 
 import (
+	"log"
 	"realtime-calculator-api/socket/model"
 	"strconv"
 )
@@ -18,8 +19,9 @@ func NewLogoutHandler(commonCount *Count, hub Hub) LogoutHandler {
 }
 
 func (l LogoutHandler) Handle(currentClient *model.Client, data string) error {
-	l.numberOfUsers--
+	log.Println("login event handler: handling event")
 
+	l.numberOfUsers--
 	writeEventHandler := model.EventMetadata{
 		Event: "logged in users",
 		Data:  strconv.Itoa(l.numberOfUsers),

@@ -1,6 +1,7 @@
 package socket
 
 import (
+	"log"
 	"realtime-calculator-api/socket/model"
 	"strconv"
 )
@@ -15,6 +16,7 @@ func NewLoginHandler(commonCount *Count, hub Hub) LoginHandler {
 }
 
 func (l LoginHandler) Handle(currentClient *model.Client, data string) error {
+	log.Println("login event handler: handling event")
 	currentClient.Username = data
 	l.numberOfUsers++
 

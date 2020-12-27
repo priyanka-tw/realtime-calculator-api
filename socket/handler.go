@@ -42,6 +42,7 @@ func (wsh Handler) Serve(w http.ResponseWriter, r *http.Request) error {
 
 	err = wsh.ListenForEvents(client)
 	if err != nil {
+		log.Println("error encountered while listening for event, err: ", err)
 		return err
 	}
 
@@ -54,6 +55,7 @@ func (wsh Handler) ListenForEvents(currentClient *model.Client) error {
 		currentClient.Connection.Close()
 	}()
 
+	log.Println("socket handler: listening for events")
 	for {
 		var ev model.EventMetadata
 		err := currentClient.Connection.ReadJSON(&ev)
