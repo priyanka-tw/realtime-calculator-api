@@ -1,17 +1,16 @@
-package event
+package socket
 
 import (
-	"realtime-calculator-api/socket"
 	"realtime-calculator-api/socket/model"
 	"strconv"
 )
 
 type LoginHandler struct {
 	*Count
-	hub socket.Hub
+	hub Hub
 }
 
-func NewLoginHandler(commonCount *Count, hub socket.Hub) LoginHandler {
+func NewLoginHandler(commonCount *Count, hub Hub) LoginHandler {
 	return LoginHandler{Count: commonCount, hub: hub}
 }
 
