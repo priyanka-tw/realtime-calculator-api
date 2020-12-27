@@ -114,9 +114,23 @@ func (suite *SocketHandlerTestSuite) Test_ShouldTriggerLogoutEvent_IfConnectedUs
 		Username:   "test-username",
 	}
 	suite.mockConn.EXPECT().ReadJSON(gomock.Any()).Return(errors.New("an error")).Times(1)
-	suite.mockHub.EXPECT().RegisteredClients().Return(map[*model.Client]bool{}).Times(1)
+	suite.mockHub.EXPECT().RegisteredClients().Return(map[*model.Client]bool{client:true}).Times(1)
 	suite.mockGenerator.EXPECT().GetHandler("logout").Return(suite.mockEventHandler, nil).Times(1)
 	suite.mockEventHandler.EXPECT().Handle(client, gomock.Any()).Return(nil).Times(1)
+	suite.mockConn.EXPECT().Close().Return(nil).Times(1)
+
+	err := suite.handler.ListenForEvents(client)
+
+	suite.NotNil(suite.T(), err)
+}
+
+func (suite *SocketHandlerTestSuite) Test_ShouldNotTriggerLogoutEvent_IfConnectedUserIsNotRegistered() {
+	client := &model.Client{
+		Connection: suite.mockConn,
+		Username:   "test-username",
+	}
+	suite.mockConn.EXPECT().ReadJSON(gomock.Any()).Return(errors.New("an error")).Times(1)
+	suite.mockHub.EXPECT().RegisteredClients().Return(map[*model.Client]bool{}).Times(1)
 	suite.mockConn.EXPECT().Close().Return(nil).Times(1)
 
 	err := suite.handler.ListenForEvents(client)

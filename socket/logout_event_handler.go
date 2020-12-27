@@ -19,7 +19,7 @@ func NewLogoutHandler(commonCount *Count, hub Hub) LogoutHandler {
 }
 
 func (l LogoutHandler) Handle(currentClient *model.Client, data string) error {
-	log.Println("login event handler: handling event")
+	log.Println("logout event handler: handling event")
 
 	l.numberOfUsers--
 	writeEventHandler := model.EventMetadata{
