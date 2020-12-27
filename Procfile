@@ -1,1 +1,1 @@
-web: ./bin/realtime-calculator-app
+web: ./bin/realtime-calculator-api
