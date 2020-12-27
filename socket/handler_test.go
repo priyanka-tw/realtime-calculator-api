@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"net/http"
 	"net/http/httptest"
+	model2 "realtime-calculator-api/calculator/model"
 	mock2 "realtime-calculator-api/socket/interface/mock"
 	"realtime-calculator-api/socket/mock"
 	"realtime-calculator-api/socket/model"
@@ -76,7 +77,6 @@ func (suite *SocketHandlerTestSuite) Test_ShouldListenAndHandleEvent_OnAConnecti
 	assert.Nil(suite.T(), actual)
 }
 
-
 func (suite *SocketHandlerTestSuite) Test_ShouldReturn_IfErrorEncounteredWhileGettingEventHandler() {
 	mockClient := &model.Client{Connection: suite.mockConn}
 	registeredClients := map[*model.Client]bool{}
@@ -116,4 +116,25 @@ func (suite *SocketHandlerTestSuite) Test_ShouldReturn500_IfErrorEncounteredWhil
 	suite.handler.ServeWrapper(suite.testContext)
 
 	assert.Equal(suite.T(), 500, suite.responseRecorder.Code)
+}
+
+func (suite *SocketHandlerTestSuite) Test_ShouldReturn200_OnBroadcastingDataToAllClients() {
+	calc := model2.Calculator{
+		Expression: "5+4",
+		Result:     "9",
+	}
+	suite.testContext.Set("calculator", calc)
+	suite.mockGenerator.EXPECT().GetHandler(gomock.Any()).Return(suite.mockEventHandler, nil).Times(1)
+	suite.mockEventHandler.EXPECT().Handle(gomock.Any(), gomock.Any()).Return(nil).Times(1)
+
+	suite.handler.BroadcastResult(suite.testContext)
+
+	assert.Equal(suite.T(), 200, suite.responseRecorder.Code)
+}
+
+func (suite *SocketHandlerTestSuite) Test_ShouldReturn400_IfNoDataForBroadcasting() {
+
+	suite.handler.BroadcastResult(suite.testContext)
+
+	assert.Equal(suite.T(), 400, suite.responseRecorder.Code)
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	model2 "realtime-calculator-api/calculator/model"
 	"realtime-calculator-api/socket/model"
 )
 
@@ -66,17 +67,47 @@ func (wsh Handler) ListenForEvents(currentClient *model.Client) error {
 			break
 		}
 
-		handler, err := wsh.ehGenerator.GetHandler(ev.Event)
+		err = wsh.triggerEvent(nil, ev)
 		if err != nil {
-			log.Println("error encountered while getting an event handler, err: ", err)
+			log.Println(err)
 			return err
 		}
+	}
+	return nil
+}
 
-		err = handler.Handle(currentClient, ev.Data)
-		if err != nil {
-			log.Println("error encountered while handling an event, err: ", err)
-			return err
-		}
+func (wsh Handler) BroadcastResult(ctx *gin.Context) {
+
+	calc, ok := ctx.Get("calculator")
+	if !ok {
+		log.Println("no data for broadcasting")
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	calculator := calc.(model2.Calculator)
+	ev := model.EventMetadata{Event: "calculate", Data: calculator.String()}
+
+	err := wsh.triggerEvent(nil, ev)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	ctx.Status(http.StatusOK)
+}
+
+func (wsh Handler) triggerEvent(currentClient *model.Client, ev model.EventMetadata) error {
+	handler, err := wsh.ehGenerator.GetHandler(ev.Event)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	err = handler.Handle(currentClient, ev.Data)
+	if err != nil {
+		log.Println(err)
+		return err
 	}
 	return nil
 }
