@@ -9,12 +9,13 @@ import (
 )
 
 type Handler struct {
-	upgrader UpgraderWrapper
-	hub      Hub
+	upgrader    UpgraderWrapper
+	hub         Hub
+	ehGenerator EventHandlerGenerator
 }
 
-func NewSocketHandler(upgrader UpgraderWrapper, hub Hub) Handler {
-	return Handler{upgrader: upgrader, hub: hub}
+func NewSocketHandler(upgrader UpgraderWrapper, hub Hub, ehGenerator EventHandlerGenerator) Handler {
+	return Handler{upgrader: upgrader, hub: hub, ehGenerator: ehGenerator}
 }
 
 func (wsh Handler) ServeWrapper(ctx *gin.Context) {
@@ -28,7 +29,7 @@ func (wsh Handler) ServeWrapper(ctx *gin.Context) {
 	ctx.Status(200)
 }
 
-func (wsh Handler) Serve(w http.ResponseWriter, r *http.Request) error{
+func (wsh Handler) Serve(w http.ResponseWriter, r *http.Request) error {
 	log.Println("socket handler: Serve request initiated")
 	wsConnection, err := wsh.upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -39,12 +40,15 @@ func (wsh Handler) Serve(w http.ResponseWriter, r *http.Request) error{
 	client := &model.Client{Connection: wsConnection}
 	wsh.hub.RegisteredClients()[client] = true
 
-	wsh.ListenForEvents(client)
+	err = wsh.ListenForEvents(client)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func (wsh Handler) ListenForEvents(currentClient *model.Client) {
+func (wsh Handler) ListenForEvents(currentClient *model.Client) error {
 	defer func() {
 		delete(wsh.hub.RegisteredClients(), currentClient)
 		currentClient.Connection.Close()
@@ -57,7 +61,20 @@ func (wsh Handler) ListenForEvents(currentClient *model.Client) {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
-			return
+			break
+		}
+
+		handler, err := wsh.ehGenerator.GetHandler(ev.Event)
+		if err != nil {
+			log.Println("error encountered while getting an event handler, err: ", err)
+			return err
+		}
+
+		err = handler.Handle(currentClient, ev.Data)
+		if err != nil {
+			log.Println("error encountered while handling an event, err: ", err)
+			return err
 		}
 	}
+	return nil
 }

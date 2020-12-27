@@ -24,7 +24,8 @@ func InitializeRouter() *gin.Engine {
 		},
 	}
 	hub := socket.NewHub()
-	socketHandler := socket.NewSocketHandler(upgrader, hub)
+	eventHandlerGenerator := socket.NewEventHandlerGenerator(hub)
+	socketHandler := socket.NewSocketHandler(upgrader, hub, eventHandlerGenerator)
 
 	engine.POST("/calculate", calculatorHandler.Calculate)
 	engine.GET("/ws", socketHandler.ServeWrapper)
