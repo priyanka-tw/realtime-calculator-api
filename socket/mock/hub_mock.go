@@ -6,7 +6,7 @@ package mock
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	"realtime-calculator-api/socket/model"
+	model "realtime-calculator-api/socket/model"
 	reflect "reflect"
 )
 
@@ -45,4 +45,18 @@ func (m *MockHub) RegisteredClients() map[*model.Client]bool {
 func (mr *MockHubMockRecorder) RegisteredClients() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisteredClients", reflect.TypeOf((*MockHub)(nil).RegisteredClients))
+}
+
+// BroadcastToAllClients mocks base method
+func (m *MockHub) BroadcastToAllClients(handler model.EventMetadata) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BroadcastToAllClients", handler)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// BroadcastToAllClients indicates an expected call of BroadcastToAllClients
+func (mr *MockHubMockRecorder) BroadcastToAllClients(handler interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BroadcastToAllClients", reflect.TypeOf((*MockHub)(nil).BroadcastToAllClients), handler)
 }
