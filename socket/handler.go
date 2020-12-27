@@ -53,6 +53,10 @@ func (wsh Handler) Serve(w http.ResponseWriter, r *http.Request) error {
 func (wsh Handler) ListenForEvents(currentClient *model.Client) error {
 	defer func() {
 		delete(wsh.hub.RegisteredClients(), currentClient)
+		if currentClient.Username != "" {
+			ev := model.EventMetadata{Event: "logout", Data: ""}
+			wsh.triggerEvent(currentClient, ev)
+		}
 		currentClient.Connection.Close()
 	}()
 
