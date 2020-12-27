@@ -31,6 +31,10 @@ func (eh eventHandlerGenerator) GetHandler(event string) (_interface.EventHandle
 	switch event {
 	case "login":
 		return NewLoginHandler(eh.Count, eh.hub), nil
+	case "logout":
+		return NewLogoutHandler(eh.Count, eh.hub), nil
+	case "calculate":
+		return NewCalculateHandler(eh.hub), nil
 	default:
 		return nil, errors.New("wrong event passed")
 	}
