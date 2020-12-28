@@ -1,10 +1,16 @@
+## realtime-calculator-api
 
-#realtime-calculator-api
+A backend service to support calculator web app which logs calculations as they happen and shares those calculations
+with everyone connected to the website.
 
-A backend service to support calculator web app  which logs calculations as they happen and shares those calculations with everyone connected to the website.
-
-## Start app locally
+### Start app locally
 
 * Export variable PORT `export PORT=8080`
 * Run `go run .`
 * Server will be running on `:8080`
+
+### Run app in docker container
+
+* Run `make build`
+* Run `make start`
+* Access application on `http://localhost:8080`
