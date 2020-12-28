@@ -40,7 +40,7 @@ func (suite *CalculatorHandlerTestSuite) SetupTest() {
 func (suite *CalculatorHandlerTestSuite) Test_ShouldReturnResult_ForGivenExpression() {
 	calculator := model.Calculator{Expression: "5*4"}
 	requestBytes, _ := json.Marshal(calculator)
-	suite.testContext.Request, _= http.NewRequest("POST", "/calculate", bytes.NewBuffer(requestBytes))
+	suite.testContext.Request, _ = http.NewRequest("POST", "/calculate", bytes.NewBuffer(requestBytes))
 	suite.mockService.EXPECT().Calculate("5*4").Return("20", nil).Times(1)
 
 	suite.handler.Calculate(suite.testContext)
@@ -52,7 +52,7 @@ func (suite *CalculatorHandlerTestSuite) Test_ShouldReturnResult_ForGivenExpress
 }
 
 func (suite *CalculatorHandlerTestSuite) Test_ShouldReturnBadRequest_ForInvalidJson() {
-	suite.testContext.Request, _= http.NewRequest("GET", "/calculate", nil)
+	suite.testContext.Request, _ = http.NewRequest("GET", "/calculate", nil)
 
 	suite.handler.Calculate(suite.testContext)
 
@@ -62,7 +62,7 @@ func (suite *CalculatorHandlerTestSuite) Test_ShouldReturnBadRequest_ForInvalidJ
 func (suite *CalculatorHandlerTestSuite) Test_ShouldReturnBadRequest_ForMissingExpression() {
 	calculator := model.Calculator{}
 	requestBytes, _ := json.Marshal(calculator)
-	suite.testContext.Request, _= http.NewRequest("POST", "/calculate", bytes.NewBuffer(requestBytes))
+	suite.testContext.Request, _ = http.NewRequest("POST", "/calculate", bytes.NewBuffer(requestBytes))
 
 	suite.handler.Calculate(suite.testContext)
 
@@ -72,7 +72,7 @@ func (suite *CalculatorHandlerTestSuite) Test_ShouldReturnBadRequest_ForMissingE
 func (suite *CalculatorHandlerTestSuite) Test_ShouldReturnInternalServerError_OnErrorFromService() {
 	calculator := model.Calculator{Expression: "5*4"}
 	requestBytes, _ := json.Marshal(calculator)
-	suite.testContext.Request, _= http.NewRequest("POST", "/calculate", bytes.NewBuffer(requestBytes))
+	suite.testContext.Request, _ = http.NewRequest("POST", "/calculate", bytes.NewBuffer(requestBytes))
 	anError := errors.New("err")
 	suite.mockService.EXPECT().Calculate("5*4").Return("", anError).Times(1)
 
@@ -84,7 +84,7 @@ func (suite *CalculatorHandlerTestSuite) Test_ShouldReturnInternalServerError_On
 func (suite *CalculatorHandlerTestSuite) Test_ShouldAddMetadata_OnContext() {
 	calculator := model.Calculator{Expression: "5*4"}
 	requestBytes, _ := json.Marshal(calculator)
-	suite.testContext.Request, _= http.NewRequest("POST", "/calculate", bytes.NewBuffer(requestBytes))
+	suite.testContext.Request, _ = http.NewRequest("POST", "/calculate", bytes.NewBuffer(requestBytes))
 	suite.mockService.EXPECT().Calculate("5*4").Return("20", nil).Times(1)
 
 	suite.handler.Calculate(suite.testContext)

@@ -51,7 +51,7 @@ func (suite *EventHandlerGeneratorSuite) Test_ShouldReturnLogoutHandler_ForLogou
 
 func (suite *EventHandlerGeneratorSuite) Test_ShouldReturnCalculateHandler_ForCalculateEvent() {
 	expected := CalculateHandler{
-		hub:   suite.mockHub,
+		hub: suite.mockHub,
 	}
 
 	actual, err := suite.generator.GetHandler("calculate")
@@ -59,7 +59,6 @@ func (suite *EventHandlerGeneratorSuite) Test_ShouldReturnCalculateHandler_ForCa
 	assert.Equal(suite.T(), expected, actual)
 	assert.Nil(suite.T(), err)
 }
-
 
 func (suite *EventHandlerGeneratorSuite) Test_ShouldReturnError_ForInvalidHandlerEvent() {
 	actual, err := suite.generator.GetHandler("test-event")

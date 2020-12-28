@@ -29,7 +29,6 @@ func (suite *HubSuite) SetupTest() {
 	suite.hub = NewHub()
 }
 
-
 func (suite *HubSuite) Test_Should_WriteJson_ForAllConnections_InHub() {
 	suite.setupConnections(2)
 	metadata := model.EventMetadata{
@@ -76,4 +75,3 @@ func (suite *HubSuite) setupConnections(quantity int) {
 		suite.hub.RegisteredClients()[client] = true
 	}
 }
-

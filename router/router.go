@@ -30,12 +30,11 @@ func InitializeRouter() *gin.Engine {
 	engine.POST("/calculate-and-broadcast", calculatorHandler.Calculate, socketHandler.BroadcastResult)
 	engine.GET("/ws", socketHandler.ServeWrapper)
 
-
 	return engine
 }
 
 func corsMiddleware(ctx *gin.Context) {
 	ctx.Writer.Header().Set("Content-Type", "application/json")
 	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-	ctx.Writer.Header().Set("Access-Control-Allow-Headers","Content-Type,access-control-allow-origin, access-control-allow-headers")
+	ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type,access-control-allow-origin, access-control-allow-headers")
 }
